@@ -73,5 +73,5 @@ for l in urls:
     else:
         print(l[0] + 'failed')
     do_csv(list_good)
+    # print(list_good)
     print('写入完成')
-
