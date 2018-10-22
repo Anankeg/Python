@@ -1,0 +1,952 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN"><head>
+	<meta charset="UTF-8" />
+	<title>iWebShop开源电子商务平台</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link type="image/x-icon" href="/favicon.ico" rel="icon" />
+	<script type="text/javascript" charset="UTF-8" src="/runtime/_systemjs/jquery/jquery-1.12.4.min.js"></script>
+	<script type="text/javascript" charset="UTF-8" src="/runtime/_systemjs/form/form.js"></script>
+	<script type="text/javascript" charset="UTF-8" src="/runtime/_systemjs/autovalidate/validate.js?v=5.1"></script><link rel="stylesheet" type="text/css" href="/runtime/_systemjs/autovalidate/style.css" />
+	<script type="text/javascript" charset="UTF-8" src="/runtime/_systemjs/artdialog/artDialog.js?v=4.8"></script><script type="text/javascript" charset="UTF-8" src="/runtime/_systemjs/artdialog/plugins/iframeTools.js"></script><link rel="stylesheet" type="text/css" href="/runtime/_systemjs/artdialog/skins/aero.css" />
+	<script type="text/javascript" charset="UTF-8" src="/runtime/_systemjs/artTemplate/artTemplate.js"></script><script type="text/javascript" charset="UTF-8" src="/runtime/_systemjs/artTemplate/artTemplate-plugin.js"></script>
+	<!--[if IE]><script src="/views/huawei/javascript/html5.js"></script><![endif]-->
+	<script src="/views/huawei/javascript/site.js"></script>
+	<script type="text/javascript" src="/public/javascript/public.js"></script>
+	<link rel="stylesheet" href="/views/huawei/skin/default/style/style.css" />
+</head>
+<body>
+<!--
+
+模版使用字体图标为优化过的 awesome 3.0 图标字体库
+
+使用帮助见:http://www.bootcss.com/p/font-awesome/
+
+ -->
+<!-- 顶部工具栏 -->
+<div class="header_top">
+	<div class="web">
+		<div class="welcome">
+			欢迎您来到 iWebShop开源电子商务平台！
+		</div>
+		<ul class="top_tool">
+			<li></li>
+			<li><a href="/index.php?controller=ucenter&amp;action=index">个人中心</a></li>
+			<li><a href="/index.php?controller=simple&amp;action=seller">申请开店</a></li>
+			<li><a href="/index.php?controller=seller&amp;action=index">商家管理</a></li>
+			<li><a href="/index.php?controller=site&amp;action=help_list">使用帮助</a></li>
+		</ul>
+	</div>
+</div>
+<!-- 顶部工具栏 -->
+<header class="header">
+	<!-- logo与搜索 -->
+	<div class="body_wrapper">
+		<div class="web">
+			<!-- logo -->
+			<div class="logo_layer">
+				<a title="iWebShop开源电子商务平台" href="/" class="logo">
+					<img src="/views/huawei/skin/default/image/logo.png" />
+				</a>
+			</div>
+			<!-- 注册与登录 -->
+			<div class="body_toolbar">
+									<div class="body_toolbar_btn login_reg">
+						<a href="/index.php?controller=simple&amp;action=login">登录</a>
+						<em> | </em>
+						<a class="reg" href="/index.php?controller=simple&amp;action=reg">注册</a>
+					</div>
+							</div>
+			<!-- 注册与登录 -->
+			<!--购物车模板 开始-->
+			<div class="header_cart" name="mycart">
+				<a href="/index.php?controller=simple&amp;action=cart" class="go_cart">
+					<i class="fa fa-shopping-cart"></i>
+					<em class="sign_total" name="mycart_count" ]="">0</em>
+				</a>
+				<div class="cart_simple" id="div_mycart"></div>
+			</div>
+			<script type="text/html" id="cartTemplete">
+			&lt;div class='cart_panel'&gt;
+				&lt;%if(goodsCount){%&gt;
+					&lt;!-- 购物车物品列表 --&gt;
+					&lt;ul class='cart_list'&gt;
+						&lt;%for(var item in goodsData){%&gt;
+						&lt;%var data = goodsData[item]%&gt;
+						&lt;li id="site_cart_dd_&lt;%=item%&gt;"&gt;
+							&lt;em&gt;&lt;%=(window().parseInt(item)+1)%&gt;&lt;/em&gt;
+							&lt;a target="_blank" href="/index.php?controller=site&amp;action=products&amp;id=&lt;%=data['goods_id']%&gt;"&gt;
+								&lt;img src="&lt;%=webroot(data['img'])%&gt;"&gt;
+							&lt;/a&gt;
+							&lt;a class="shop_name" target="_blank" href="/index.php?controller=site&amp;action=products&amp;id=&lt;%=data['goods_id']%&gt;"&gt;&lt;%=data['name']%&gt;&lt;/a&gt;
+							&lt;!-- &lt;p class="shop_class"&gt;&lt;/p&gt; --&gt;
+							&lt;div class="shop_price"&gt;&lt;p&gt;￥ &lt;%=data['sell_price']%&gt; &lt;span&gt;x &lt;%=data['count']%&gt;&lt;/span&gt;&lt;/p&gt;&lt;/div&gt;
+							&lt;i class="fa fa-remove" onclick="removeCart('&lt;%=data['id']%&gt;','&lt;%=data['type']%&gt;');$('#site_cart_dd_&lt;%=item%&gt;').hide('slow');"&gt;&lt;/i&gt;
+						&lt;/li&gt;
+						&lt;%}%&gt;
+					&lt;/ul&gt;
+					&lt;!-- 购物车物品列表 --&gt;
+					&lt;!-- 购物车物品统计 --&gt;
+					&lt;div class="cart_total"&gt;
+						&lt;p&gt;
+							共&lt;span name="mycart_count"&gt;&lt;%=goodsCount%&gt;&lt;/span&gt;件
+							总额：&lt;em name="mycart_sum"&gt;￥&lt;%=goodsSum%&gt;&lt;/em&gt;
+						&lt;/p&gt;
+						&lt;a href="/index.php?controller=simple&amp;action=cart"&gt;结算&lt;/a&gt;
+					&lt;/div&gt;
+					&lt;!-- 购物车物品统计 --&gt;
+				&lt;%}else{%&gt;
+					&lt;!-- 购物车无内容 --&gt;
+					&lt;div class='cart_no'&gt;购物车空空如也~&lt;/div&gt;
+				&lt;%}%&gt;
+			&lt;/div&gt;
+			</script>
+			<!--购物车模板 结束-->
+			<!-- 搜索框 -->
+			<div class="search_box">
+					<!-- 搜索内容 -->
+				<form method="get" action="/index.php">
+					<input type="hidden" name="controller" value="site" />
+					<input type="hidden" name="action" value="search_list" />
+					<div class="search">
+						<input type="text" name="word" class="search_keyword" autocomplete="off" />
+						<button class="search_submit" type="submit">
+							<i class="fa fa-search"></i>
+						</button>
+					</div>
+				</form>
+				<!-- 热门搜索 -->
+				<div class="search_hotwords">
+															<a href="/index.php?controller=site&amp;action=search_list&amp;word=%E7%9C%9F%E7%9A%AE%E5%A5%B3%E5%8C%85">真皮女包</a>
+															<a href="/index.php?controller=site&amp;action=search_list&amp;word=%E8%A1%AC%E8%A1%A3">衬衣</a>
+									</div>
+			</div>
+		</div>
+	</div>
+		<!-- logo与搜索 -->
+
+	<div class="nav_bar">
+		<div class="home_nav_bar user_center">
+		<!-- 导航栏 -->
+		<div class="web">
+			<!-- 分类列表 -->
+			<div class="category_list">
+				<!-- 全部商品 -->
+				<a class="all_goods_sort" href="" target="_blank">
+					<h3 class="all">全部商品</h3>
+				</a>
+				<!-- 全部商品 -->
+				<!-- 分类列表-详情 -->
+				<ul class="cat_list none">
+										<li>
+						<!-- 分类列表-导航模块 -->
+						<div class="cat_nav">
+							<h3><a href="/index.php?controller=site&amp;action=pro_list&amp;cat=1">家用电器</a></h3>
+														<a href="/index.php?controller=site&amp;action=pro_list&amp;cat=2">大家电</a>
+														<a href="/index.php?controller=site&amp;action=pro_list&amp;cat=13">生活电器</a>
+														<a href="/index.php?controller=site&amp;action=pro_list&amp;cat=14">厨房电器</a>
+														<i class="fa fa-angle-right"></i>
+						</div>
+						<!-- 分类列表-导航模块 -->
+						<!-- 分类列表-导航内容模块 -->
+						<div class="cat_more">
+							<h3>
+								<a href="/index.php?controller=site&amp;action=pro_list&amp;cat=1">
+									<span>家用电器</span>
+									<i class="fa fa-angle-right"></i>
+								</a>
+							</h3>
+							<ul class="cat_nav_list">
+																<li><a href="/index.php?controller=site&amp;action=pro_list&amp;cat=2">大家电</a></li>
+																<li><a href="/index.php?controller=site&amp;action=pro_list&amp;cat=13">生活电器</a></li>
+																<li><a href="/index.php?controller=site&amp;action=pro_list&amp;cat=14">厨房电器</a></li>
+															</ul>
+							<ul class="cat_content_list">
+																<li>
+									<a href="/index.php?controller=site&amp;action=products&amp;id=5" target="_blank" title="索尼（SONY） KDL-60WM15B 60英寸全高清LED液晶电视（黑色）">
+										<img class="img-lazyload" src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9Ycvec3k5J2F6Ybl7N1s6TngtRk1JQUFBQUFBSWg0b19tS0tFQUFBby1BTUJJTDhBQWlINjcyMC5qcGcvdy8xMTgvaC8xMTgO0O0O" alt="索尼（SONY） KDL-60WM15B 60英寸全高清LED液晶电视（黑色）" />
+										<h3>索尼（SONY） KDL-60WM15B 60英寸全高清LED液晶电视（黑色）</h3>
+										<p class="price">￥ 6099.00</p>
+									</a>
+								</li>
+																<li>
+									<a href="/index.php?controller=site&amp;action=products&amp;id=168" target="_blank" title="美的（Midea）电饭煲 5L/5升 大容量可预约定时 多功能智能电饭锅 FS5018">
+										<img class="img-lazyload" src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8Y5v3MfD5EdvaM7j9IcveN3T5R2j6Mbj7J1j6ZDFOMmFmYTBkYTEuanBnL3cvMTE4L2gvMTE4" alt="美的（Midea）电饭煲 5L/5升 大容量可预约定时 多功能智能电饭锅 FS5018" />
+										<h3>美的（Midea）电饭煲 5L/5升 大容量可预约定时 多功能智能电饭锅 FS5018</h3>
+										<p class="price">￥ 299.00</p>
+									</a>
+								</li>
+																<li>
+									<a href="/index.php?controller=site&amp;action=products&amp;id=155" target="_blank" title="科沃斯（Ecovacs） 地宝魔镜S（CEN540-LG）全自动充电家用清扫智能扫地机器人吸尘器">
+										<img class="img-lazyload" src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8Y5v3MfD5EdvaM7j9IcveN3T5Y2w6ObG7R1j6ZWROMTE5Y2QzMTEuanBnL3cvMTE4L2gvMTE4" alt="科沃斯（Ecovacs） 地宝魔镜S（CEN540-LG）全自动充电家用清扫智能扫地机器人吸尘器" />
+										<h3>科沃斯（Ecovacs） 地宝魔镜S（CEN540-LG）全自动充电家用清扫智能扫地机器人吸尘器</h3>
+										<p class="price">￥ 1099.00</p>
+									</a>
+								</li>
+																<li>
+									<a href="/index.php?controller=site&amp;action=products&amp;id=171" target="_blank" title="美的（Midea）电饭煲 4L/4升 可预约定时涡轮动力多功能智能电饭锅 FS406C">
+										<img class="img-lazyload" src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8Y5v3MfD5EdvaM7j9IcveN3T5U216NbD7Y1y6YjlOMTY3ZTEwNWIuanBnL3cvMTE4L2gvMTE4" alt="美的（Midea）电饭煲 4L/4升 可预约定时涡轮动力多功能智能电饭锅 FS406C" />
+										<h3>美的（Midea）电饭煲 4L/4升 可预约定时涡轮动力多功能智能电饭锅 FS406C</h3>
+										<p class="price">￥ 269.00</p>
+									</a>
+								</li>
+															</ul>
+						</div>
+						<!-- 分类列表-导航内容模块 -->
+					</li>
+										<li>
+						<!-- 分类列表-导航模块 -->
+						<div class="cat_nav">
+							<h3><a href="/index.php?controller=site&amp;action=pro_list&amp;cat=4">食品饮料</a></h3>
+														<a href="/index.php?controller=site&amp;action=pro_list&amp;cat=5">进口食品</a>
+														<a href="/index.php?controller=site&amp;action=pro_list&amp;cat=33">酒品</a>
+														<i class="fa fa-angle-right"></i>
+						</div>
+						<!-- 分类列表-导航模块 -->
+						<!-- 分类列表-导航内容模块 -->
+						<div class="cat_more">
+							<h3>
+								<a href="/index.php?controller=site&amp;action=pro_list&amp;cat=4">
+									<span>食品饮料</span>
+									<i class="fa fa-angle-right"></i>
+								</a>
+							</h3>
+							<ul class="cat_nav_list">
+																<li><a href="/index.php?controller=site&amp;action=pro_list&amp;cat=5">进口食品</a></li>
+																<li><a href="/index.php?controller=site&amp;action=pro_list&amp;cat=33">酒品</a></li>
+															</ul>
+							<ul class="cat_content_list">
+																<li>
+									<a href="/index.php?controller=site&amp;action=products&amp;id=210" target="_blank" title="长城特酿3年解百纳干红葡萄酒 整箱装 750ml*6瓶">
+										<img class="img-lazyload" src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8Y5v3MfD5EdvaM7j9IcveN3T5R2i6NbG7Q1x6ZjRONjc3MWQ4NTEuanBnL3cvMTE4L2gvMTE4" alt="长城特酿3年解百纳干红葡萄酒 整箱装 750ml*6瓶" />
+										<h3>长城特酿3年解百纳干红葡萄酒 整箱装 750ml*6瓶</h3>
+										<p class="price">￥ 139.00</p>
+									</a>
+								</li>
+																<li>
+									<a href="/index.php?controller=site&amp;action=products&amp;id=6" target="_blank" title="德国 进口牛奶 欧德堡（Oldenburger）超高温处理部分脱脂牛奶1L*12">
+										<img class="img-lazyload" src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveN3T5U2z6NbW7U106MjVOZTEzOTljMDcuanBnL3cvMTE4L2gvMTE4" alt="德国 进口牛奶 欧德堡（Oldenburger）超高温处理部分脱脂牛奶1L*12" />
+										<h3>德国 进口牛奶 欧德堡（Oldenburger）超高温处理部分脱脂牛奶1L*12</h3>
+										<p class="price">￥ 99.00</p>
+									</a>
+								</li>
+																<li>
+									<a href="/index.php?controller=site&amp;action=products&amp;id=9" target="_blank" title="澳大利亚 进口牛奶 德运 （Devondale ）全脂牛奶200ml*24整箱装">
+										<img class="img-lazyload" src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveN3T5Q236NbD7Q1y6NjhOY2U3MWJlYmYuanBnL3cvMTE4L2gvMTE4" alt="澳大利亚 进口牛奶 德运 （Devondale ）全脂牛奶200ml*24整箱装" />
+										<h3>澳大利亚 进口牛奶 德运 （Devondale ）全脂牛奶200ml*24整箱装</h3>
+										<p class="price">￥ 129.00</p>
+									</a>
+								</li>
+																<li>
+									<a href="/index.php?controller=site&amp;action=products&amp;id=213" target="_blank" title="法国进口红酒 拉菲罗氏传奇波尔多干红葡萄酒 双支礼盒装带酒具 750ml*2瓶">
+										<img class="img-lazyload" src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8Y5v3MfD5EdvaM7j9IcveN3T5Y216NbT7M1z6MDdOZGU2ZWRhMjUuanBnL3cvMTE4L2gvMTE4" alt="法国进口红酒 拉菲罗氏传奇波尔多干红葡萄酒 双支礼盒装带酒具 750ml*2瓶" />
+										<h3>法国进口红酒 拉菲罗氏传奇波尔多干红葡萄酒 双支礼盒装带酒具 750ml*2瓶</h3>
+										<p class="price">￥ 168.00</p>
+									</a>
+								</li>
+															</ul>
+						</div>
+						<!-- 分类列表-导航内容模块 -->
+					</li>
+										<li>
+						<!-- 分类列表-导航模块 -->
+						<div class="cat_nav">
+							<h3><a href="/index.php?controller=site&amp;action=pro_list&amp;cat=7">家具</a></h3>
+														<a href="/index.php?controller=site&amp;action=pro_list&amp;cat=8">家装建材</a>
+														<a href="/index.php?controller=site&amp;action=pro_list&amp;cat=31">卧室家具</a>
+														<i class="fa fa-angle-right"></i>
+						</div>
+						<!-- 分类列表-导航模块 -->
+						<!-- 分类列表-导航内容模块 -->
+						<div class="cat_more">
+							<h3>
+								<a href="/index.php?controller=site&amp;action=pro_list&amp;cat=7">
+									<span>家具</span>
+									<i class="fa fa-angle-right"></i>
+								</a>
+							</h3>
+							<ul class="cat_nav_list">
+																<li><a href="/index.php?controller=site&amp;action=pro_list&amp;cat=8">家装建材</a></li>
+																<li><a href="/index.php?controller=site&amp;action=pro_list&amp;cat=31">卧室家具</a></li>
+															</ul>
+							<ul class="cat_content_list">
+																<li>
+									<a href="/index.php?controller=site&amp;action=products&amp;id=196" target="_blank" title="作木坊  实木床1.5 1.8米高箱海棠木双人床实木家具婚床卧室A805 标准框架床(不含床头柜) ">
+										<img class="img-lazyload" src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8Y5v3MfD5EdvaM7j9IcveN3T5Y2z6ZbG7U1z6MjBOMjc3NWFlNGQuanBnL3cvMTE4L2gvMTE4" alt="作木坊  实木床1.5 1.8米高箱海棠木双人床实木家具婚床卧室A805 标准框架床(不含床头柜) " />
+										<h3>作木坊  实木床1.5 1.8米高箱海棠木双人床实木家具婚床卧室A805 标准框架床(不含床头柜) </h3>
+										<p class="price">￥ 4699.00</p>
+									</a>
+								</li>
+																<li>
+									<a href="/index.php?controller=site&amp;action=products&amp;id=199" target="_blank" title="喜临门（SLEEMON）乳胶椰棕床垫 邦尼尔弹簧软硬两用 席梦思床垫  墨竹灰 1500*2000*">
+										<img class="img-lazyload" src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8Y5v3MfD5EdvaM7j9IcveN3T5U226ObD7E126MGNONzUyZDRmMDguanBnL3cvMTE4L2gvMTE4" alt="喜临门（SLEEMON）乳胶椰棕床垫 邦尼尔弹簧软硬两用 席梦思床垫  墨竹灰 1500*2000*" />
+										<h3>喜临门（SLEEMON）乳胶椰棕床垫 邦尼尔弹簧软硬两用 席梦思床垫  墨竹灰 1500*2000*</h3>
+										<p class="price">￥ 1899.00</p>
+									</a>
+								</li>
+																<li>
+									<a href="/index.php?controller=site&amp;action=products&amp;id=13" target="_blank" title="开林尚系列 触摸6档滑动调光折叠阅读学习工作LED台灯HL-13301 品质白">
+										<img class="img-lazyload" src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveN3T5U236Zbm7U116NmZONDE4ZmY4MWUuanBnL3cvMTE4L2gvMTE4" alt="开林尚系列 触摸6档滑动调光折叠阅读学习工作LED台灯HL-13301 品质白" />
+										<h3>开林尚系列 触摸6档滑动调光折叠阅读学习工作LED台灯HL-13301 品质白</h3>
+										<p class="price">￥ 99.00</p>
+									</a>
+								</li>
+																<li>
+									<a href="/index.php?controller=site&amp;action=products&amp;id=202" target="_blank" title="美国金可儿(kingkoil)乳胶床垫 席梦思弹簧床垫加厚版 五星级酒店床垫软硬适中 碧玺 高端定制">
+										<img class="img-lazyload" src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8Y5v3MfD5EdvaM7j9IcveN3T5N2i6NbG7Z1i6MjZOYzZkNTM3ZTUuanBnL3cvMTE4L2gvMTE4" alt="美国金可儿(kingkoil)乳胶床垫 席梦思弹簧床垫加厚版 五星级酒店床垫软硬适中 碧玺 高端定制" />
+										<h3>美国金可儿(kingkoil)乳胶床垫 席梦思弹簧床垫加厚版 五星级酒店床垫软硬适中 碧玺 高端定制</h3>
+										<p class="price">￥ 8199.00</p>
+									</a>
+								</li>
+															</ul>
+						</div>
+						<!-- 分类列表-导航内容模块 -->
+					</li>
+										<li>
+						<!-- 分类列表-导航模块 -->
+						<div class="cat_nav">
+							<h3><a href="/index.php?controller=site&amp;action=pro_list&amp;cat=10">服装</a></h3>
+														<a href="/index.php?controller=site&amp;action=pro_list&amp;cat=11">男装</a>
+														<a href="/index.php?controller=site&amp;action=pro_list&amp;cat=20">女包</a>
+														<a href="/index.php?controller=site&amp;action=pro_list&amp;cat=21">女装</a>
+														<i class="fa fa-angle-right"></i>
+						</div>
+						<!-- 分类列表-导航模块 -->
+						<!-- 分类列表-导航内容模块 -->
+						<div class="cat_more">
+							<h3>
+								<a href="/index.php?controller=site&amp;action=pro_list&amp;cat=10">
+									<span>服装</span>
+									<i class="fa fa-angle-right"></i>
+								</a>
+							</h3>
+							<ul class="cat_nav_list">
+																<li><a href="/index.php?controller=site&amp;action=pro_list&amp;cat=11">男装</a></li>
+																<li><a href="/index.php?controller=site&amp;action=pro_list&amp;cat=20">女包</a></li>
+																<li><a href="/index.php?controller=site&amp;action=pro_list&amp;cat=21">女装</a></li>
+															</ul>
+							<ul class="cat_content_list">
+																<li>
+									<a href="/index.php?controller=site&amp;action=products&amp;id=24" target="_blank" title="批发藏族舞蹈表演服 藏族接待服舞蹈服 民族舞演出服厂家直销">
+										<img class="img-lazyload" src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveM3j5A2x6NbT7A126MTYyMzI3Mzg2NDcuanBnL3cvMTE4L2gvMTE4" alt="批发藏族舞蹈表演服 藏族接待服舞蹈服 民族舞演出服厂家直销" />
+										<h3>批发藏族舞蹈表演服 藏族接待服舞蹈服 民族舞演出服厂家直销</h3>
+										<p class="price">￥ 720.00</p>
+									</a>
+								</li>
+																<li>
+									<a href="/index.php?controller=site&amp;action=products&amp;id=97" target="_blank" title="2015新款性感蕾丝薄棉杯贝壳杯内衣胸罩 聚拢调整型品牌文胸批发">
+										<img class="img-lazyload" src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveM3j5A2x6NbT7A126MTYyMzM1MDM5NzAuanBnL3cvMTE4L2gvMTE4" alt="2015新款性感蕾丝薄棉杯贝壳杯内衣胸罩 聚拢调整型品牌文胸批发" />
+										<h3>2015新款性感蕾丝薄棉杯贝壳杯内衣胸罩 聚拢调整型品牌文胸批发</h3>
+										<p class="price">￥ 22.50</p>
+									</a>
+								</li>
+																<li>
+									<a href="/index.php?controller=site&amp;action=products&amp;id=27" target="_blank" title="批发民族舞蹈服表演服 藏族舞台演出服 少数民族迎宾服手工服饰">
+										<img class="img-lazyload" src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveM3j5A2x6NbT7A126MTYyMzI3Mzk5OTYuanBnL3cvMTE4L2gvMTE4" alt="批发民族舞蹈服表演服 藏族舞台演出服 少数民族迎宾服手工服饰" />
+										<h3>批发民族舞蹈服表演服 藏族舞台演出服 少数民族迎宾服手工服饰</h3>
+										<p class="price">￥ 720.00</p>
+									</a>
+								</li>
+																<li>
+									<a href="/index.php?controller=site&amp;action=products&amp;id=100" target="_blank" title="2015新款小胸性感蕾丝上薄下厚内衣胸罩 聚拢调整型品牌文胸批发">
+										<img class="img-lazyload" src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveM3j5A2x6NbT7A126MTYyMzM1MDk5NjguanBnL3cvMTE4L2gvMTE4" alt="2015新款小胸性感蕾丝上薄下厚内衣胸罩 聚拢调整型品牌文胸批发" />
+										<h3>2015新款小胸性感蕾丝上薄下厚内衣胸罩 聚拢调整型品牌文胸批发</h3>
+										<p class="price">￥ 24.00</p>
+									</a>
+								</li>
+															</ul>
+						</div>
+						<!-- 分类列表-导航内容模块 -->
+					</li>
+									</ul>
+				<!-- 分类列表-详情 -->
+			</div>
+			<!-- 分类列表 -->
+			<!-- 导航索引 -->
+			<div class="nav_index">
+				<ul class="nav">
+					<li class="user_nav_index home_nav_index"><a href="/index.php?controller=site&amp;action=index"><span>首 页</span></a></li>
+										<li class="user_nav_index home_nav_index"><a href="http://www.aircheng.com"><span>产品官网</span></a></li>
+										<li class="user_nav_index home_nav_index"><a href="/index.php?controller=admin&amp;action=index"><span>后台管理</span></a></li>
+										<li class="user_nav_index home_nav_index"><a href="/index.php?controller=seller&amp;action=index"><span>商家管理</span></a></li>
+									</ul>
+			</div>
+		</div>
+		</div>
+	</div>
+</header>
+
+<!--主要模板内容 开始-->
+<div class="home_content">
+<script type="text/javascript" charset="UTF-8" src="/runtime/_systemjs/jqueryZoom/jquery.imagezoom.min.js"></script><link rel="stylesheet" type="text/css" href="/runtime/_systemjs/jqueryZoom/imagezoom.css" />
+<script type="text/javascript" charset="UTF-8" src="/runtime/_systemjs/jquerySlider/jquery.bxslider.min.js"></script><link rel="stylesheet" type="text/css" href="/runtime/_systemjs/jquerySlider/jquery.bxslider.css" />
+<script type="text/javascript" src="/public/javascript/products.js"></script>
+<div class="bigweb">
+	<section class="breadcrumb">
+		<span>您当前的位置：</span> <a href="/">首页</a> &gt;
+				<a href="/index.php?controller=site&amp;action=pro_list&amp;cat=1">家用电器</a> &gt;
+				<a href="/index.php?controller=site&amp;action=pro_list&amp;cat=14">厨房电器</a> &gt;
+				<a href="/index.php?controller=site&amp;action=pro_list&amp;cat=19">微波炉</a> &gt;
+				乐视TV（Letv） S50 Air FL2041全配版 50英寸 2D智能LED液晶 超级电视（红	</section>
+	<section class="goods_base">
+		<!--图片放大镜-->
+		<section class="goods_zoom">
+			<div class="pic_show" style="width:435px;height:435px;position:relative;z-index:5;padding-bottom:5px;">
+				<img id="picShow" rel="/upload/2015/06/16/55403a66N8e908fe3.jpg" src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveN3T5U206MbD7N1h6NjZOOGU5MDhmZTMuanBnL3cvNDM1L2gvNDM1" />
+			</div>
+
+			<div class="bx-wrapper" style="max-width: 420px; margin: 0px auto;"><div class="bx-viewport" style="width: 100%; overflow: hidden; position: relative; height: 60px;"><ul id="goodsPhotoList" class="pic_thumb" style="width: 815%; position: relative; transition-duration: 0s; transform: translate3d(0px, 0px, 0px);">
+								<li style="float: left; list-style: none; position: relative; width: 72px; margin-right: 15px;">
+					<a href="javascript:void(0);" thumbimg="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveN3T5U206MbD7N1h6NjZOOGU5MDhmZTMuanBnL3cvNDM1L2gvNDM1" sourceimg="/upload/2015/06/16/55403a66N8e908fe3.jpg" class="current">
+						<img src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveN3T5U206MbD7N1h6NjZOOGU5MDhmZTMuanBnL3cvNjAvaC82MAO0O0OO0O0O" width="60px" height="60px" />
+					</a>
+				</li>
+								<li style="float: left; list-style: none; position: relative; width: 72px; margin-right: 15px;">
+					<a href="javascript:void(0);" thumbimg="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveN3T5U206MbD7N1h6NjZOYTU0NjMwYTIuanBnL3cvNDM1L2gvNDM1" sourceimg="/upload/2015/06/16/55403a66Na54630a2.jpg">
+						<img src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveN3T5U206MbD7N1h6NjZOYTU0NjMwYTIuanBnL3cvNjAvaC82MAO0O0OO0O0O" width="60px" height="60px" />
+					</a>
+				</li>
+								<li style="float: left; list-style: none; position: relative; width: 72px; margin-right: 15px;">
+					<a href="javascript:void(0);" thumbimg="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveN3T5U206MbD7N1h6NjVON2UxZTkyYmIuanBnL3cvNDM1L2gvNDM1" sourceimg="/upload/2015/06/16/55403a65N7e1e92bb.jpg">
+						<img src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveN3T5U206MbD7N1h6NjVON2UxZTkyYmIuanBnL3cvNjAvaC82MAO0O0OO0O0O" width="60px" height="60px" />
+					</a>
+				</li>
+								<li style="float: left; list-style: none; position: relative; width: 72px; margin-right: 15px;">
+					<a href="javascript:void(0);" thumbimg="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveN3T5U206MbD7N1h6NjJOYmZiZjhmMmMuanBnL3cvNDM1L2gvNDM1" sourceimg="/upload/2015/06/16/55403a62Nbfbf8f2c.jpg">
+						<img src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveN3T5U206MbD7N1h6NjJOYmZiZjhmMmMuanBnL3cvNjAvaC82MAO0O0OO0O0O" width="60px" height="60px" />
+					</a>
+				</li>
+								<li style="float: left; list-style: none; position: relative; width: 72px; margin-right: 15px;">
+					<a href="javascript:void(0);" thumbimg="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveN3T5U206MbD7N1h6NjFOMGUyM2NkODIuanBnL3cvNDM1L2gvNDM1" sourceimg="/upload/2015/06/16/55403a61N0e23cd82.jpg">
+						<img src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveN3T5U206MbD7N1h6NjFOMGUyM2NkODIuanBnL3cvNjAvaC82MAO0O0OO0O0O" width="60px" height="60px" />
+					</a>
+				</li>
+								<li style="float: left; list-style: none; position: relative; width: 72px; margin-right: 15px;">
+					<a href="javascript:void(0);" thumbimg="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveN3T5U236Nbj7l1l6OTJOZjIxNDYzMmUuanBnL3cvNDM1L2gvNDM1" sourceimg="/upload/2015/06/16/55769e92Nf214632e.jpg">
+						<img src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveN3T5U236Nbj7l1l6OTJOZjIxNDYzMmUuanBnL3cvNjAvaC82MAO0O0OO0O0O" width="60px" height="60px" />
+					</a>
+				</li>
+							</ul></div><div class="bx-controls bx-has-controls-direction"><div class="bx-controls-direction"><a class="bx-prev disabled" href="">Prev</a><a class="bx-next" href="">Next</a></div></div></div>
+		</section>
+		<!--图片放大镜-->
+		<section class="goods_info">
+			<h1 class="goods_info_title">乐视TV（Letv） S50 Air FL2041全配版 50英寸 2D智能LED液晶 超级电视（红</h1>
+			<div class="goods_info_num">商品编号：<span id="data_goodsNo">1510479</span></div>
+			<!--基本信息区域-->
+			<ul class="goods_ul">
+				<li>
+									</li>
+
+				<!--活动页面-->
+				
+				<!--普通正常-->
+														<li>销售价：<em class="price">￥<span id="data_sellPrice">2999.00</span></em></li>
+									
+				<li>市场价：￥<del id="data_marketPrice">3569.00</del></li>
+
+				<li>
+					库存：现货 <span id="data_storeNums">100 </span>
+					<span class="favorite" onclick="favorite_add_ajax(2,this);">
+						<i class="fa fa-heart"></i>
+						收藏此商品
+					</span>
+				</li>
+
+				<li>
+					<div class="star_box">
+						<strong class="item">顾客评分：</strong>
+						<span class="star star_0"></span>
+						<u>(已有0人评价)</u>
+					</div>
+				</li>
+
+				
+				<li>
+					至
+					<a class="sel_area blue" href="javascript:;" name="localArea">浙江</a>：
+					<span id="deliveInfo">快递：<b style="color:#fe6c00">￥20</b>（直接由第三方物流公司配送）  货到付款：<b style="color:#fe6c00">￥20</b>（直接由第三方物流公司配送）  </span>
+					<div class="area_box">
+						<ul>
+							<li><a data-code="1" href="#J_PostageTableCont"><strong>全部</strong></a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="110000">北京市</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="120000">天津市</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="130000">河北省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="140000">山西省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="150000">内蒙古自治区</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="210000">辽宁省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="220000">吉林省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="230000">黑龙江省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="310000">上海市</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="320000">江苏省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="330000">浙江省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="340000">安徽省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="350000">福建省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="360000">江西省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="370000">山东省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="410000">河南省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="420000">湖北省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="430000">湖南省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="440000">广东省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="450000">广西壮族自治区</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="460000">海南省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="500000">重庆市</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="510000">四川省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="520000">贵州省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="530000">云南省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="540000">西藏自治区</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="610000">陕西省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="620000">甘肃省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="630000">青海省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="640000">宁夏回族自治区</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="650000">新疆维吾尔自治区</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="710000">台湾省</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="810000">香港特别行政区</a></li>
+														<li><a href="javascript:void(0);" name="areaSelectButton" value="820000">澳门特别行政区</a></li>
+													</ul>
+					</div>
+				</li>
+
+				<!--商家信息 开始-->
+								<!--商家信息 结束-->
+			</ul>
+			<!--购买区域-->
+			<div class="good_info_buy">
+							
+				<dl>
+					<dt>购买数量：</dt>
+					<dd>
+						<div class="goods_resize">
+							<span class="reduce" id="buyReduceButton">─</span>
+							<input class="input" type="text" id="buyNums" value="1" maxlength="5" />
+							<span class="add" id="buyAddButton">+</span>
+						</div>
+					</dd>
+				</dl>
+
+				<div class="btn_submit_buy" id="buyNowButton">
+					<i class="fa fa-shopping-cart"></i>
+					<span>立即购买</span>
+				</div>
+				<div class="btn_add_cart" id="joinCarButton">
+					<i class="fa fa-cart-plus"></i>
+					<span>加入购物车</span>
+				</div>
+						</div>
+		</section>
+	</section>
+
+	<section class="web">
+		<!-- 产品详情 -->
+		<section class="products_main">
+			<!-- 详情目录 -->
+			<div class="goods_tab" name="showButton">
+				<label class="current">商品详情</label>
+				<label>顾客评价(0)</label>
+				<label>购买记录(0)</label>
+				<label>购买前咨询(0)</label>
+				<label>网友讨论圈(0)</label>
+			</div>
+			<!-- 详情目录 -->
+			<div class="goods_con" name="showBox">
+				<!-- 商品详情 start -->
+				<div>
+					<ul class="goods_infos">
+						<li>商品名称：乐视TV（Letv） S50 Air FL2041全配版 50英寸 2D智能LED液晶 超级电视（红</li>
+
+						
+												<li>商品毛重：<label id="data_weight">500.00g</label></li>
+						
+												<li>单位：件</li>
+						
+												<li>上架时间：2015-06-16 23:18:20</li>
+						
+											</ul>
+										<article class="article_content">
+						<h3>产品描述：</h3>
+						<div class="content_tpl">    <div class="formwork_bt" id="detail-tag-id-0" name="detail-tag-id-0" text="产品信息">   <div class="formwork_bt_dz">    <span>产品信息</span>    <span class="s2">Product Information</span>   </div>  </div> <div class="formwork"><div class="formwork_img"><img src="http://img20.360buyimg.com/vc/jfs/t1528/216/200654177/274522/44dc325b/5562e0f0N92795936.jpg" /></div></div><div class="formwork"><div class="formwork_img"><img src="http://img20.360buyimg.com/vc/jfs/t1663/157/164168412/87915/ec33c4c1/557a9a92Ne5aeca70.gif" /></div></div>    <div class="formwork_bt" id="detail-tag-id-3" name="detail-tag-id-3" text="产品功能">   <div class="formwork_bt_dz">    <span>产品功能</span>    <span class="s2">Product Function</span>   </div>  </div> <div class="formwork"><div class="formwork_img"><img src="http://img20.360buyimg.com/vc/jfs/t751/72/1478828862/166288/2628704b/553dad2bNa3e830c9.jpg" /></div></div><div class="formwork"><div class="formwork_img"><img src="http://img20.360buyimg.com/vc/jfs/t1141/42/843234312/27816/5ade2257/554c6e85N647320ef.jpg" /></div></div><div class="formwork"><div class="formwork_img"><img src="http://img20.360buyimg.com/vc/jfs/t1225/14/601199064/348362/6a448c17/553dad37Na6941d6b.jpg" /></div></div><div class="formwork"><div class="formwork_img"><img src="http://img20.360buyimg.com/vc/jfs/t1165/264/847787457/73600/8729013f/554c703bN6717a512.jpg" /></div></div><div class="formwork"><div class="formwork_img"><img src="http://img20.360buyimg.com/vc/jfs/t874/121/743192831/108240/20fb4dc3/554c7464N7514f9e0.jpg" /></div></div><div class="formwork"><div class="formwork_img"><img src="http://img20.360buyimg.com/vc/jfs/t943/74/690965393/276185/34db9afc/553dad65Nab6631a0.jpg" /></div></div>    <div class="formwork_bt" id="detail-tag-id-10" name="detail-tag-id-10" text="产品特色">   <div class="formwork_bt_dz">    <span>产品特色</span>    <span class="s2">Selling Point</span>   </div>  </div> <div class="formwork"><div class="formwork_img"><img src="http://img20.360buyimg.com/vc/jfs/t1606/106/15271442/49229/9c9acd6f/554c71a2N468dc1fc.jpg" /></div></div><div class="formwork"><div class="formwork_img"><img src="http://img20.360buyimg.com/vc/jfs/t1534/254/16424422/303633/83b44dff/554c72ccNe4ae330c.jpg" /></div></div><div class="formwork"><div class="formwork_titlecenter">丰富轮播频道</div><div class="formwork_text">热播视频内容及时更新，电影、综艺、全球体育赛事......</div></div><div class="formwork"><div class="formwork_img"><img src="http://img20.360buyimg.com/vc/jfs/t1264/54/819180946/31609/213c1c98/554c80a2N8bc32102.jpg" /></div></div><div class="formwork"><div class="formwork_img"><img src="http://img20.360buyimg.com/vc/jfs/t1105/60/833279626/118025/4faa28b7/554c7da8N5e436808.jpg" /></div></div><div class="formwork"><div class="formwork_img"><img src="http://img20.360buyimg.com/vc/jfs/t1216/131/712833126/689361/b899c376/553dad98N07d8c0c8.jpg" /></div></div><div class="formwork"><div class="formwork_img"><img src="http://img20.360buyimg.com/vc/jfs/t1003/27/708853438/651394/903ecae4/553dada6N727c792c.jpg" /></div></div><div class="formwork"><div class="formwork_img"><img src="http://img20.360buyimg.com/vc/jfs/t1603/77/220796233/631854/37d2b1ba/55658df7N582632f3.jpg" /></div></div><div class="formwork"><div class="formwork_img"><img src="http://img20.360buyimg.com/vc/jfs/t1114/176/708083008/345804/90b852d4/553dadc7N60f1e0e7.jpg" /></div></div><div class="formwork"><div class="formwork_img"><img src="http://img20.360buyimg.com/vc/jfs/t1258/27/581734983/604913/b9c8bb4a/553daddcN8ad9665d.jpg" /></div></div>    <div class="formwork_bt" id="detail-tag-id-21" name="detail-tag-id-21" text="售后服务">   <div class="formwork_bt_dz">    <span>售后服务</span>    <span class="s2">After-Sales Service</span>   </div>  </div> <div class="formwork"><div class="formwork_titlecenter">超级电视售后安装须知</div><div class="formwork_text">1）、您签收产品后，我们不建议客户自行拆箱，您只需联系乐视售后人员上门为您服务，客户可以直接通过拨打乐视客服热线1010-9000预约安装和调试； 2）、售后安装服务范围受配送地理区域限制，全国范围内一些地区无法上门安装，请在购买前向乐视客户服务中心进行咨询。咨询电话：1010-9000）、安装服务：商品正常情况下乐视负责免费上门安装调试，视您所在区域(郊区或远离市中心区域)不同将会收取一定远距离交通服务费用，并会根据实际情况，可能产生配件费等费用，您可拨打乐视安装服务热线咨询相关收费服务标准。咨询电话：1010-9000）、平板电视有底座和挂架两种安装方式，此款为标配底座的电视。若您需要安装挂架，需要您在预约安装时拨打1010-9000提出需要挂架的申请，由乐视的售后人员带挂架进行安装（跟具您所选的安装型号不同，会收取不同挂架的产品费用，具体金额请咨询乐视售后）如是顾客自己在别处买的挂架，乐视是不能提供安装服务。</div></div><div class="formwork"><div class="formwork_titlecenter">购物提示</div><div class="formwork_text">由京东送货人员送货上门，您在验货与签收时当场仔细检查送到商品与送货单的商品是否一致、外包装是否完好； 2、您签收产品后，我们不建议客户自行拆箱，您只需联系乐视的售后人员上门为您服务，客户可以直接通过客服热线1010-9000预约安装和调试；需要顾客 提前调试好网络环境 3、安装费用：新购电视机的安装乐视提供免费上门安装服务，除免费服务条款外（例如：挂架等）；具体收费标准以售后服务人员上门提供的价格表为准，您可咨询乐视全国服务热线10109000； 4、包装箱：建议您对所购电视包装箱保留30天，否则商品在30天内因质量问题退、换货时需要承担相应的包装材料费用； 5、商品附件：请您我司安装人员上门安装时共同拆箱确认附带配件是否完整，如您所购商品缺少包装附件，凭购物发票可联系乐视为您补寄； 6、商品发票：购买商品开据发票明细需与所购商品明细一致，以保证您享受商品安装和保修。</div></div><div class="formwork"><div class="formwork_titlecenter">售后保障</div><div class="formwork_text">所有乐视电视如果出现质量问题，请您先拨打乐视售后电话：10109000，乐视将专门派售后工程师为您上门鉴定，如果属于产品质量问题，乐视售后将为您出具产品质量检测单，顾客凭产品质量检测单，可以向京东提出退换货申请。（产品7天包退，30天包换）。</div></div><div class="formwork"><div class="formwork_titlecenter">退换货注意事项</div><div class="formwork_text">退换货注意事项 1、未经授权的修理、误用、疏忽、滥用、事故、改动、不正确的安装，不予退换货；2、假性故障或因顾客家中环境影响使用效果的，经鉴定无故障的，不予退换货；3、因个人使用不当造成的商品损坏的，不予退换货；4、商品安装前顾客需与安装工程师当场开箱验机，开箱后如产品无质量问题，不予退换货。</div></div></div><br />					</article>
+									</div>
+				<!-- 商品详情 end -->
+
+				<!-- 顾客评论 start -->
+				<div class="none comment_list">
+					<div id="commentBox"></div>
+					<!--评论JS模板-->
+					<script type="text/html" id="commentRowTemplate">
+					&lt;div class="comment_item"&gt;
+						&lt;div class="user"&gt;
+							&lt;img src="&lt;%=webroot(head_ico)%&gt;" width="70px" height="70px" onerror="this.src='/views/huawei/skin/default/image/user_ico.gif'" /&gt;
+							&lt;span&gt;&lt;%=username%&gt;&lt;/span&gt;
+						&lt;/div&gt;
+						&lt;div class="desc"&gt;
+							&lt;time&gt;&lt;%=comment_time%&gt;&lt;/time&gt;
+							&lt;div class="star_box"&gt;
+								&lt;strong class="item"&gt;评分：&lt;/strong&gt;
+								&lt;span class="star star_&lt;%=point%&gt;"&gt;&lt;/span&gt;
+							&lt;/div&gt;
+							&lt;p class="contents"&gt;&lt;strong&gt;评价：&lt;/strong&gt;&lt;span&gt;&lt;%=contents%&gt;&lt;/span&gt;&lt;/p&gt;
+							&lt;%if(recontents){%&gt;
+							&lt;p class="recontents"&gt;&lt;strong&gt;回复：&lt;/strong&gt;&lt;span&gt;&lt;%=recontents%&gt;&lt;/span&gt;&lt;/p&gt;
+							&lt;%}%&gt;
+						&lt;/div&gt;
+					&lt;/div&gt;
+					</script>
+				</div>
+				<!-- 顾客评论 end -->
+
+				<!-- 购买记录 start -->
+				<div class="none history_list">
+					<table>
+						<thead>
+							<tr>
+								<th>购买人</th>
+								<th>出价</th>
+								<th>数量</th>
+								<th>购买时间</th>
+								<th>状态</th>
+							</tr>
+						</thead>
+						<tbody class="dashed" id="historyBox"></tbody>
+					</table>
+					<!--购买历史js模板-->
+					<script type="text/html" id="historyRowTemplate">
+					&lt;tr&gt;
+						&lt;td&gt;&lt;strong&gt;&lt;%=username?username:'游客'%&gt;&lt;/strong&gt;&lt;/td&gt;
+						&lt;td&gt;&lt;em&gt;&lt;%=goods_price%&gt;&lt;/em&gt;&lt;/td&gt;
+						&lt;td&gt;&lt;u&gt;&lt;%=goods_nums%&gt;&lt;/u&gt;&lt;/td&gt;
+						&lt;td&gt;&lt;time&gt;&lt;%=completion_time%&gt;&lt;/time&gt;&lt;/td&gt;
+						&lt;td&gt;&lt;span&gt;成交&lt;/span&gt;&lt;/td&gt;
+					&lt;/tr&gt;
+					</script>
+				</div>
+				<!-- 购买记录 end -->
+
+				<!-- 购买前咨询 start -->
+				<div class="none ask_list ">
+					<a class="ask_btn" href="/index.php?controller=site&amp;action=consult&amp;id=2">我要咨询</a>
+					<div id="referBox"></div>
+					<!--购买咨询JS模板-->
+					<script type="text/html" id="referRowTemplate">
+					&lt;div class="ask_item"&gt;
+						&lt;div class="user"&gt;
+							&lt;img src="&lt;%=webroot(head_ico)%&gt;" width="70px" height="70px" onerror="this.src='/views/huawei/skin/default/image/user_ico.gif'" /&gt;
+							&lt;span&gt;&lt;%=username%&gt;&lt;/span&gt;
+						&lt;/div&gt;
+						&lt;div class="desc"&gt;
+							&lt;header&gt;
+								&lt;i class="fa fa-comment-alt"&gt;&lt;/i&gt;
+								&lt;strong&gt;咨询内容：&lt;/strong&gt;
+								&lt;time&gt;&lt;%=time%&gt;&lt;/time&gt;
+							&lt;/header&gt;
+							&lt;section&gt;&lt;%=question%&gt;&lt;/section&gt;
+							&lt;%if(answer){%&gt;
+							&lt;div class="answer"&gt;
+								&lt;header&gt;
+									&lt;i class="fa fa-comments-alt"&gt;&lt;/i&gt;
+									&lt;strong&gt;商家回复：&lt;/strong&gt;
+									&lt;time&gt;&lt;%=reply_time%&gt;&lt;/time&gt;
+								&lt;/header&gt;
+								&lt;section&gt;&lt;%=answer%&gt;&lt;/section&gt;
+							&lt;/div&gt;
+							&lt;%}%&gt;
+						&lt;/div&gt;
+					&lt;/div&gt;
+					</script>
+				</div>
+				<!-- 购买前咨询 end -->
+
+				<!-- 网友讨论圈 start -->
+				<div class="none discussion_list">
+					<a class="ask_btn" name="discussButton">发表话题</a>
+					<div id="discussBox"></div>
+					<!--讨论JS模板-->
+					<script type="text/html" id="discussRowTemplate">
+						&lt;div class="discussion_item"&gt;
+							&lt;strong&gt;&lt;%=username%&gt;&lt;/strong&gt;
+							&lt;time&gt;&lt;%=time%&gt;&lt;/time&gt;
+							&lt;p&gt;&lt;%=contents%&gt;&lt;/p&gt;
+						&lt;/div&gt;
+					</script>
+					<section class="discuss_form none" id="discussTable">
+						<dl>
+							<dt>讨论内容：</dt>
+							<dd><textarea class="input_textarea" id="discussContent" pattern="required" alt="请填写内容"></textarea></dd>
+						</dl>
+						<dl>
+							<dt>验证码：</dt>
+							<dd>
+								<input type="text" class="input_text w100" name="captcha" pattern="^\w{5}$" alt="填写下面图片所示的字符" />
+								<img src="/index.php?controller=site&amp;action=getCaptcha" id="captchaImg" onclick="changeCaptcha()" />
+							</dd>
+						</dl>
+						<dl>
+							<dt></dt>
+							<dd><input class="input_submit" type="submit" name="sendDiscussButton" value="发表" /></dd>
+						</dl>
+					</section>
+				</div>
+				<!-- 网友讨论圈 end -->
+			</div>
+		</section>
+		<!-- 产品详情 -->
+		<!-- 产品详情侧边 -->
+		<aside class="products_bar">
+						<div class="products_bar_box">
+				<h3 class="products_bar_box_head">热卖排行</h3>
+				<ul class="products_bar_hot">
+										<li>
+						<a href="/index.php?controller=site&amp;action=products&amp;id=87">
+							<i class="goods_mark"></i>
+							<img src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveM3j5A2x6NbT7A126MTYyMzMzMjU5ODYuanBnL3cvNTYvaC81NgO0O0OO0O0O" alt="2014新款爆款欧美进口真皮女包H型鳄鱼纹空姐包手提单肩斜跨包包" />
+							<div>
+								<p class="goods_title"><span>2014新款爆款欧美进口真皮女包H型鳄鱼纹空姐包手提单肩斜跨包包</span></p>
+								<p class="goods_sell_price">￥352.00</p>
+							</div>
+						</a>
+					</li>
+										<li>
+						<a href="/index.php?controller=site&amp;action=products&amp;id=39">
+							<i class="goods_mark"></i>
+							<img src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveM3j5A2x6NbT7A126MTYyMzI3NDM3NjIuanBnL3cvNTYvaC81NgO0O0OO0O0O" alt="供应少数民族服饰 藏族接待服 民族舞蹈表演服演出服代理" />
+							<div>
+								<p class="goods_title"><span>供应少数民族服饰 藏族接待服 民族舞蹈表演服演出服代理</span></p>
+								<p class="goods_sell_price">￥720.00</p>
+							</div>
+						</a>
+					</li>
+										<li>
+						<a href="/index.php?controller=site&amp;action=products&amp;id=107">
+							<i class="goods_mark"></i>
+							<img src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfT5IdvaM7j9gcveM3j5A2x6NbT7E1y6MjgwOTIyMDk0ODcuanBnL3cvNTYvaC81NgO0O0OO0O0O" alt="iWebShop支付测试" />
+							<div>
+								<p class="goods_title"><span>iWebShop支付测试</span></p>
+								<p class="goods_sell_price">￥0.10</p>
+							</div>
+						</a>
+					</li>
+										<li>
+						<a href="/index.php?controller=site&amp;action=products&amp;id=106">
+							<i class="goods_mark"></i>
+							<img src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveM3j5A2x6NbT7A126MTYyMzM1MTM3NzMuanBnL3cvNTYvaC81NgO0O0OO0O0O" alt="单笔订单满6千元15天包退 背心式刺绣内衣聚拢调整型品牌文胸批发" />
+							<div>
+								<p class="goods_title"><span>单笔订单满6千元15天包退 背心式刺绣内衣聚拢调整型品牌文胸批发</span></p>
+								<p class="goods_sell_price">￥25.00</p>
+							</div>
+						</a>
+					</li>
+										<li>
+						<a href="/index.php?controller=site&amp;action=products&amp;id=43">
+							<i class="goods_mark"></i>
+							<img src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveM3j5A2x6NbT7A126MTYyMzMzMDMxMzEuanBnL3cvNTYvaC81NgO0O0OO0O0O" alt="荔枝纹头层牛皮双肩包 时尚休闲包 真皮女包手提包" />
+							<div>
+								<p class="goods_title"><span>荔枝纹头层牛皮双肩包 时尚休闲包 真皮女包手提包</span></p>
+								<p class="goods_sell_price">￥280.00</p>
+							</div>
+						</a>
+					</li>
+										<li>
+						<a href="/index.php?controller=site&amp;action=products&amp;id=96">
+							<i class="goods_mark"></i>
+							<img src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveM3j5A2x6NbT7A126MTYyMzMzMTkyNzkuanBnL3cvNTYvaC81NgO0O0OO0O0O" alt="2014 最新爆款 欧美时尚大牌 真皮手提包包" />
+							<div>
+								<p class="goods_title"><span>2014 最新爆款 欧美时尚大牌 真皮手提包包</span></p>
+								<p class="goods_sell_price">￥279.00</p>
+							</div>
+						</a>
+					</li>
+										<li>
+						<a href="/index.php?controller=site&amp;action=products&amp;id=42">
+							<i class="goods_mark"></i>
+							<img src="/index.php?controller=pic&amp;action=thumb&amp;img=deXaBcs2be22F6kbLbz8Iew1M5T8U5v3MfD5YdvaM7T9YcveM3j5A2x6NbT7A126MTYyMzMzMDM5MTYuanBnL3cvNTYvaC81NgO0O0OO0O0O" alt="韩版学院风范 荔枝纹 双肩包 女士 真皮女包 手提包" />
+							<div>
+								<p class="goods_title"><span>韩版学院风范 荔枝纹 双肩包 女士 真皮女包 手提包</span></p>
+								<p class="goods_sell_price">￥260.00</p>
+							</div>
+						</a>
+					</li>
+									</ul>
+			</div>
+		</aside>
+		<!-- 产品详情侧边 -->
+	</section>
+</div>
+<script>
+$(function(){
+	//初始化商品详情对象
+	var productInstance = new productClass("2","","","0");
+
+	//初始化商品轮换图
+	$('#goodsPhotoList').bxSlider({
+		infiniteLoop:false,
+		hideControlOnEnd:true,
+		controls:true,
+		pager:false,
+		minSlides: 5,
+		maxSlides: 5,
+		slideWidth: 72,
+		slideMargin: 15,
+		onSliderLoad:function(currentIndex){
+			//默认初始化显示第一张
+			$('[thumbimg]:eq('+currentIndex+')').trigger('click');
+			//放大镜
+			$("#picShow").imagezoom();
+		}
+	});
+
+	//城市地域选择按钮事件
+	$('.sel_area').hover(
+		function(){
+			$('.area_box').show();
+		},function(){
+			$('.area_box').hide();
+		}
+	);
+
+	$('.area_box').hover(
+		function(){
+			$('.area_box').show();
+		},function(){
+			$('.area_box').hide();
+		}
+	);
+
+	//按钮绑定
+	$('[name="showButton"]&gt;label').click(function(){
+		$(this).siblings().removeClass('current');
+		$(this).addClass('current');
+
+		$('[name="showBox"]&gt;div').hide();
+		$('[name="showBox"]&gt;div:eq('+$(this).index()+')').show();
+
+		switch($(this).index())
+		{
+			case 1:
+			{
+				productInstance.comment_ajax();
+			}
+			break;
+
+			case 2:
+			{
+				productInstance.history_ajax();
+			}
+			break;
+
+			case 3:
+			{
+				productInstance.refer_ajax();
+			}
+			break;
+
+			case 4:
+			{
+				productInstance.discuss_ajax();
+			}
+			break;
+		}
+	});
+});
+</script>
+
+</div>
+<!--主要模板内容 结束-->
+
+<footer class="foot">
+	<section class="service">
+		<ul>
+			<li class="item1">
+				<i class="fa fa-star"></i>
+				<strong>正品优选</strong>
+			</li>
+			<li class="item2">
+				<i class="fa fa-globe"></i>
+				<strong>上市公司</strong>
+			</li>
+			<li class="item3">
+				<i class="fa fa-inbox"></i>
+				<strong>300家连锁门店</strong>
+			</li>
+			<li class="item4">
+				<i class="fa fa-map-marker"></i>
+				<strong>上百家维修网点 全国联保</strong>
+			</li>
+		</ul>
+	</section>
+	<section class="help">
+		<div class="prompt_link">
+									<dl class="help_1">
+				<dt>
+					<p class="line"></p>
+					<p class="title"><a href="/index.php?controller=site&amp;action=help_list&amp;id=3">购物指南</a></p>
+				</dt>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=4">购物流程</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=26">会员制度</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=27">积分说明</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=28">交易条款</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=29">订单状态</a></dd>
+							</dl>
+						<dl class="help_2">
+				<dt>
+					<p class="line"></p>
+					<p class="title"><a href="/index.php?controller=site&amp;action=help_list&amp;id=4">支付帮助</a></p>
+				</dt>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=30">货到付款</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=31">在线支付</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=32">银行电汇</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=33">余额支付</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=53">支付帮助</a></dd>
+							</dl>
+						<dl class="help_3">
+				<dt>
+					<p class="line"></p>
+					<p class="title"><a href="/index.php?controller=site&amp;action=help_list&amp;id=6">配送帮助</a></p>
+				</dt>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=34">配送范围及运费</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=35">上门自提</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=36">加急快递</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=37">商品验货与签收</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=38">EMS/邮政普包</a></dd>
+							</dl>
+						<dl class="help_4">
+				<dt>
+					<p class="line"></p>
+					<p class="title"><a href="/index.php?controller=site&amp;action=help_list&amp;id=5">售后服务</a></p>
+				</dt>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=39">换货说明</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=40">退货说明</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=41">退/换货注意事项</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=42">余额的使用与提现</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=43">发票制度</a></dd>
+							</dl>
+						<dl class="help_5">
+				<dt>
+					<p class="line"></p>
+					<p class="title"><a href="/index.php?controller=site&amp;action=help_list&amp;id=7">帮助信息</a></p>
+				</dt>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=44">关于我们</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=45">常见问题</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=46">找回密码</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=47">退订邮件/短信</a></dd>
+								<dd><a href="/index.php?controller=site&amp;action=help&amp;id=48">联系客服</a></dd>
+							</dl>
+					</div>
+		<div class="contact">
+			<p class="line"></p>
+			<em>400-888-8888</em>
+			<span>24小时在线客服(仅收市话费)</span>
+			<a href="#"><i class="fa fa-comments"></i> 在线客服</a>
+		</div>
+	</section>
+	<section class="copy">
+		<div class="footer" style="text-align:center"><p class="links"><a href="">关于我们</a>|<a href="">常见问题</a>|<a href="">安全交易</a>|<a href="">购买流程</a>|<a href="">如何付款</a>|<a href="">联系我们</a>|<a href="">合作提案</a></p><p class="copyright">Powered by <a href="http://www.aircheng.com">iWebShop</a></p>Copyright © 2005-2014 <a class="copyys" target="_blank" href="http://www.miibeian.gov.cn/">鲁ICP备01000010号</a></div>	</section>
+</footer>
+
+
+
+<script>
+//当首页时显示分类
+
+$(function(){
+	$('input:text[name="word"]').val("");
+});
+</script>
+<script type="text/javascript">
+_webUrl = "/index.php?controller=_controller_&amp;action=_action_&amp;_paramKey_=_paramVal_";_themePath = "/views/huawei/";_skinPath = "/views/huawei/skin/default/";_webRoot = "/";
+</script><input type="hidden" id="product_id" alt="货品ID" value="" /><div style="display: none; position: fixed; left: 0px; top: 0px; width: 100%; height: 100%; cursor: move; opacity: 0; background: rgb(255, 255, 255);"></div><div style="display:none;" class="jqPreload0"><img src="/upload/2015/06/16/55403a66N8e908fe3.jpg" /></div></body></html>
